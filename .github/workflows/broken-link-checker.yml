@@ -1,0 +1,24 @@
+name: Check for Broken Links
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  link-check:
+    name: Lychee Link Checker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install lychee
+        run: |
+          curl -sSf https://raw.githubusercontent.com/lycheeverse/lychee/main/install.sh | bash -s -- --bin-dir /usr/local/bin
+
+      - name: Run link checker
+        run: |
+          lychee --verbose --exclude-mail --no-progress . || true
